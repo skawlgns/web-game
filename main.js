@@ -10,6 +10,8 @@ const popUp = document.querySelector(".pop-up");
 const popUpMsg = document.querySelector(".pop-up__message");
 const Refresh = document.querySelector(".pop-up__refresh");
 const picked = new Audio("./sound/o.mp3");
+const bgSound = new Audio("./sound/background.wav");
+
 let score = 1;
 let started = false;
 let timer = undefined;
@@ -36,10 +38,12 @@ function startGame() {
   showTimer();
   startTimer();
   hidePopUp();
+  playMusic(bgSound);
 }
 
 function stopGame() {
   started = false;
+  stopMusic(bgSound);
   showPopUp();
   hideGameButton();
 }
@@ -48,10 +52,11 @@ function finishGame(win) {
   started = false;
   stopGameTimer();
   showPopUp(win ? "YOU LOSE..." : "CONGRATULATION!!");
+  stopMusic(bgSound);
 }
 
 function startTimer() {
-  let playTime = 1;
+  let playTime = 10;
 
   updateTimer(playTime);
   timer = setInterval(() => {
@@ -70,6 +75,7 @@ function catchCharacter(e) {
   }
   if (e.target.matches(".item")) {
     e.target.remove();
+    playMusic(picked);
     --score;
     if (score === 0) {
       finishGame(score);
@@ -106,6 +112,14 @@ function showPopUp(text) {
 
 function hidePopUp() {
   popUp.classList.add("pop-up--hide");
+}
+
+function playMusic(sound) {
+  sound.play();
+}
+
+function stopMusic(sound) {
+  sound.pause();
 }
 
 function init() {
